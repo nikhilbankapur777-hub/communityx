@@ -1,7 +1,7 @@
 {
   "prithvi@commx": {
     "name": "Prithvi Raj",
-    "tick": "verifiedg",
+    "tick": "assets/verifiedg.svg",
     "wallpaper": "assets/wallpapers/prithviw.png",
     "pfp": "assets/pfps/prithvi.png",
     "college": "NEW HORIZON COLLEGE OF ENGINEERING",
@@ -15,7 +15,7 @@
   },
   "anush@commx": {
     "name": "Anush",
-    "tick": "verifiedb",
+    "tick": "assets/verified.svg",
     "wallpaper": "assets/wallpapers/anushw.png",
     "pfp": "assets/pfps/anush.png",
     "college": "NEW HORIZON COLLEGE OF ENGINEERING",
