@@ -16,14 +16,18 @@
     --muted:#666;
     --text:#f2f2f2;
   }
-  *{ box-sizing:border-box; margin:0; padding:0; }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
   html,body{
     background:var(--bg);
     color:var(--text);
     font-family:"Space Grotesk", sans-serif;
     min-height:100vh;
+    overscroll-behavior-y:contain;
   }
   a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; }
+  :focus{ outline:none; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 
   /* ---------- top bar (over wallpaper) ---------- */
   .topbar{
@@ -44,8 +48,10 @@
     -webkit-backdrop-filter:blur(20px);
     border:1px solid rgba(255,255,255,.08);
     cursor:pointer;
+    -webkit-user-select:none; user-select:none;
   }
-  .icon-btn img{ width:18px; height:18px; }
+  .icon-btn:active{ background:rgba(0,0,0,.55); }
+  .icon-btn img{ width:18px; height:18px; pointer-events:none; }
   .topbar-title{
     font-size:.92rem;
     font-weight:600;
@@ -54,7 +60,7 @@
     text-shadow:0 1px 6px rgba(0,0,0,.6);
   }
   .topbar-left{ display:flex; align-items:center; gap:10px; }
-  .topbar-right{ display:flex; align-items:center; gap:10px; }
+  .topbar-right{ display:flex; align-items:center; gap:10px; position:relative; }
 
   /* ---------- wallpaper ---------- */
   .wallpaper-wrap{
@@ -88,6 +94,8 @@
     border:3px solid var(--bg);
     background:#1a1a1a center/cover no-repeat;
     display:block;
+    cursor:pointer;
+    -webkit-user-select:none; user-select:none;
   }
   .name-row{
     display:flex;
@@ -190,6 +198,118 @@
   }
   .not-found h2{ color:#fff; font-size:1.1rem; font-weight:600; }
   .not-found p{ color:var(--muted); font-size:.88rem; }
+
+  /* ---------- dropdown menu (three-dot) ---------- */
+  .dropdown{
+    position:absolute;
+    top:46px; right:0;
+    background:rgba(20,20,20,.55);
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:6px;
+    min-width:150px;
+    z-index:20;
+    opacity:0;
+    transform:translateY(-6px) scale(.97);
+    pointer-events:none;
+    transition:opacity .15s ease, transform .15s ease;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+  }
+  .dropdown.open{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+  .dropdown-item{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 12px; border-radius:10px;
+    font-size:.86rem; color:#eee; cursor:pointer;
+  }
+  .dropdown-item:active{ background:rgba(255,255,255,.08); }
+  .dropdown-item i{ width:16px; text-align:center; color:#9aa0a6; font-size:.9rem; }
+
+  /* ---------- overlays (pfp viewer / share sheet) ---------- */
+  .overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.92);
+    display:flex; align-items:center; justify-content:center;
+    z-index:100;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .overlay.open{ opacity:1; pointer-events:auto; }
+  .overlay-topbar{
+    position:absolute; top:0; left:0; right:0;
+    padding:18px 16px;
+    z-index:2;
+  }
+
+  .pfp-frame{
+    width:min(78vw, 320px);
+    aspect-ratio:1/1;
+    border-radius:28px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:#111;
+  }
+  .pfp-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .share-card{
+    width:min(88vw,360px);
+    max-height:82vh;
+    overflow-y:auto;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .share-title{ font-weight:600; font-size:1rem; color:#fff; }
+  .share-link-row{
+    display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:9px 9px 9px 14px;
+  }
+  .share-link-row span{
+    flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-size:.76rem; color:#9aa0a6; font-family:"Space Mono", monospace;
+  }
+  .copy-btn{
+    background:var(--accent); color:#fff; border:none;
+    padding:8px 13px; border-radius:10px;
+    font-size:.76rem; font-weight:600; cursor:pointer; white-space:nowrap;
+  }
+  .share-apps{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .share-app{
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    font-size:.7rem; color:#9aa0a6; cursor:pointer; background:none; border:none;
+  }
+  .share-app .circle{
+    width:50px; height:50px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.25rem; color:#fff;
+  }
+  .share-qr{ display:flex; flex-direction:column; align-items:center; gap:8px; padding-top:4px; }
+  .share-qr img{ width:150px; height:150px; border-radius:14px; background:#fff; padding:8px; }
+  .share-qr span{ font-size:.74rem; color:var(--muted); }
+
+  .toast{
+    position:fixed; bottom:34px; left:50%;
+    transform:translateX(-50%);
+    background:rgba(24,24,24,.9);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.08);
+    padding:10px 18px; border-radius:30px;
+    font-size:.82rem; color:#fff;
+    z-index:300;
+    opacity:0; pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .toast.show{ opacity:1; }
 </style>
 </head>
 <body>
@@ -197,11 +317,12 @@
 <div id="app"></div>
 
 <script>
-(function(){
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id');
+  var currentProfile = null;
+  var openOverlayName = null;
 
-  const LINK_META = {
+  var LINK_META = {
     instagram: { label:'Instagram', icon:'fa-brands fa-instagram', color:'#E1306C' },
     linkedin:  { label:'LinkedIn',  icon:'fa-brands fa-linkedin',  color:'#0A66C2' },
     x:         { label:'X',         icon:'fa-brands fa-x-twitter', color:'#FFFFFF' },
@@ -214,95 +335,205 @@
   }
 
   function escapeHtml(str){
-    const d = document.createElement('div');
+    var d = document.createElement('div');
     d.innerText = str;
     return d.innerHTML;
   }
 
+  function usernameFromId(rawId){
+    return (rawId || '').split('@')[0];
+  }
+
   function render(profile){
-    const tickHtml = profile.tick ? '<img class="tick" src="' + profile.tick + '" alt="verified">' : '';
+    currentProfile = profile;
+    var tickHtml = profile.tick ? '<img class="tick" src="' + profile.tick + '" alt="verified">' : '';
+    var collegeUrl = profile.collegeUrl || ('https://www.google.com/search?q=' + encodeURIComponent(profile.college || ''));
 
-    const collegeUrl = profile.collegeUrl || ('https://www.google.com/search?q=' + encodeURIComponent(profile.college || ''));
-
-    const pillsHtml = Object.keys(LINK_META).map(function(key){
-      const url = profile.links && profile.links[key];
+    var pillsHtml = Object.keys(LINK_META).map(function(key){
+      var url = profile.links && profile.links[key];
       if(!url) return '';
-      const meta = LINK_META[key];
+      var meta = LINK_META[key];
       return '<a class="pill" href="' + url + '" target="_blank" rel="noopener">' +
         '<i class="' + meta.icon + '" style="color:' + meta.color + '"></i>' + meta.label + '</a>';
     }).join('');
 
-    document.getElementById('app').innerHTML = `
-      <div class="topbar">
-        <div class="topbar-left">
-          <div class="icon-btn" onclick="history.back()"><img src="assets/back.svg" alt="back"></div>
-          <span class="topbar-title">community x</span>
-        </div>
-        <div class="topbar-right">
-          <div class="icon-btn"><img src="assets/ai.svg" alt="ai"></div>
-          <div class="icon-btn"><img src="assets/threedot.svg" alt="more"></div>
-        </div>
-      </div>
+    document.getElementById('app').innerHTML =
+      '<div class="topbar">' +
+        '<div class="topbar-left">' +
+          '<div class="icon-btn" onclick="history.back()"><img src="assets/back.svg" alt="back"></div>' +
+          '<span class="topbar-title">community x</span>' +
+        '</div>' +
+        '<div class="topbar-right">' +
+          '<div class="icon-btn"><img src="assets/ai.svg" alt="ai"></div>' +
+          '<div class="icon-btn" id="moreBtn" onclick="toggleMenu(event)"><img src="assets/threedot.svg" alt="more"></div>' +
+          '<div class="dropdown" id="dropdown">' +
+            '<div class="dropdown-item" onclick="onShareClick()"><i class="fa-solid fa-share-nodes"></i>Share</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
 
-      <div class="wallpaper-wrap">
-        <img src="${profile.wallpaper}" alt="">
-        <div class="wallpaper-fade"></div>
-      </div>
+      '<div class="wallpaper-wrap">' +
+        '<img src="' + profile.wallpaper + '" alt="">' +
+        '<div class="wallpaper-fade"></div>' +
+      '</div>' +
 
-      <div class="profile-head">
-        <div class="pfp" style="background-image:url('${profile.pfp}')"></div>
+      '<div class="profile-head">' +
+        '<div class="pfp" id="pfpTrigger" onclick="openPfp()" style="background-image:url(\'' + profile.pfp + '\')"></div>' +
 
-        <div class="name-row">
-          <span class="name">${escapeHtml(profile.name || '')}</span>
-          ${tickHtml}
-        </div>
-        <div class="userid">@${escapeHtml(id)}</div>
+        '<div class="name-row">' +
+          '<span class="name">' + escapeHtml(profile.name || '') + '</span>' +
+          tickHtml +
+        '</div>' +
+        '<div class="userid">@' + escapeHtml(id) + '</div>' +
 
-        <a class="college-row" href="${collegeUrl}" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3L2 8.5L12 14L22 8.5L12 3Z" stroke="#9aa0a6" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 11V16.5C6 16.5 8.5 18.5 12 18.5C15.5 18.5 18 16.5 18 16.5V11" stroke="#9aa0a6" stroke-width="1.4"/></svg>
-          <span>${escapeHtml(profile.college || 'College not linked')}</span>
-        </a>
+        '<a class="college-row" href="' + collegeUrl + '" target="_blank" rel="noopener">' +
+          '<svg viewBox="0 0 24 24" fill="none"><path d="M12 3L2 8.5L12 14L22 8.5L12 3Z" stroke="#9aa0a6" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 11V16.5C6 16.5 8.5 18.5 12 18.5C15.5 18.5 18 16.5 18 16.5V11" stroke="#9aa0a6" stroke-width="1.4"/></svg>' +
+          '<span>' + escapeHtml(profile.college || 'College not linked') + '</span>' +
+        '</a>' +
 
-        <div class="bio">${escapeHtml(profile.bio || 'No bio yet')}</div>
+        '<div class="bio">' + escapeHtml(profile.bio || 'No bio yet') + '</div>' +
 
-        ${pillsHtml ? '<div class="pills-row">' + pillsHtml + '</div>' : ''}
-      </div>
+        (pillsHtml ? '<div class="pills-row">' + pillsHtml + '</div>' : '') +
+      '</div>' +
 
-      <div class="divider"></div>
-      <div class="section-label">CONTRIBUTIONS</div>
-      <div class="empty-state">Contributions is empty</div>
-    `;
+      '<div class="divider"></div>' +
+      '<div class="section-label">CONTRIBUTIONS</div>' +
+      '<div class="empty-state">Contributions is empty</div>' +
+
+      '<div class="overlay" id="pfpOverlay">' +
+        '<div class="overlay-topbar"><div class="icon-btn" onclick="closeOverlay()"><img src="assets/back.svg" alt="back"></div></div>' +
+        '<div class="pfp-frame"><img src="' + profile.pfp + '" alt=""></div>' +
+      '</div>' +
+
+      '<div class="overlay" id="shareOverlay">' +
+        '<div class="overlay-topbar"><div class="icon-btn" onclick="closeOverlay()"><img src="assets/back.svg" alt="back"></div></div>' +
+        '<div class="share-card">' +
+          '<div class="share-title">Share profile</div>' +
+          '<div class="share-link-row"><span id="shareUrlText"></span><button class="copy-btn" onclick="copyShareLink()">Copy</button></div>' +
+          '<div class="share-apps">' +
+            '<button class="share-app" onclick="shareVia(\'whatsapp\')"><span class="circle" style="background:#25D366"><i class="fa-brands fa-whatsapp"></i></span>WhatsApp</button>' +
+            '<button class="share-app" onclick="shareVia(\'telegram\')"><span class="circle" style="background:#229ED9"><i class="fa-brands fa-telegram"></i></span>Telegram</button>' +
+            '<button class="share-app" onclick="shareVia(\'x\')"><span class="circle" style="background:#000;border:1px solid #333"><i class="fa-brands fa-x-twitter"></i></span>X</button>' +
+          '</div>' +
+          '<div class="share-qr"><img id="shareQrImg" src="" alt="QR code"><span>Scan to open this profile</span></div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="toast" id="toast">Link copied</div>';
+
+    var pfpEl = document.getElementById('pfpTrigger');
+    if(pfpEl) pfpEl.style.backgroundImage = "url('" + profile.pfp + "')";
   }
 
+  /* ---------- dropdown menu ---------- */
+  function toggleMenu(e){
+    if(e) e.stopPropagation();
+    var dd = document.getElementById('dropdown');
+    dd.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e){
+    var dd = document.getElementById('dropdown');
+    var moreBtn = document.getElementById('moreBtn');
+    if(dd && dd.classList.contains('open') && !dd.contains(e.target) && e.target !== moreBtn && !moreBtn.contains(e.target)){
+      dd.classList.remove('open');
+    }
+  });
+
+  /* ---------- overlay stack (back-button aware) ---------- */
+  function openOverlayEl(name){
+    document.getElementById('dropdown').classList.remove('open');
+    openOverlayName = name;
+    document.getElementById(name).classList.add('open');
+    history.pushState({ overlay:name }, '', window.location.href);
+  }
+  function closeOverlay(){
+    history.back();
+  }
+  window.addEventListener('popstate', function(){
+    if(openOverlayName){
+      var el = document.getElementById(openOverlayName);
+      if(el) el.classList.remove('open');
+      openOverlayName = null;
+    }
+  });
+
+  function openPfp(){
+    openOverlayEl('pfpOverlay');
+  }
+
+  function onShareClick(){
+    document.getElementById('dropdown').classList.remove('open');
+    var shareUrl = window.location.href;
+    document.getElementById('shareUrlText').textContent = shareUrl;
+    document.getElementById('shareQrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(shareUrl);
+    openOverlayEl('shareOverlay');
+  }
+
+  function shareMessage(){
+    return 'Take a look at community ' + usernameFromId(id);
+  }
+
+  function shareVia(app){
+    var url = window.location.href;
+    var text = shareMessage();
+    var target = '';
+    if(app === 'whatsapp'){
+      target = 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + url);
+    } else if(app === 'telegram'){
+      target = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text);
+    } else if(app === 'x'){
+      target = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+    }
+    if(target) window.open(target, '_blank', 'noopener');
+  }
+
+  function copyShareLink(){
+    var url = window.location.href;
+    function showToast(){
+      var t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(function(){ t.classList.remove('show'); }, 1600);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(showToast).catch(showToast);
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      try{ document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta);
+      showToast();
+    }
+  }
+
+  /* ---------- boot ---------- */
   if(!id){
     renderNotFound('No profile id was given in the link.');
-    return;
+  } else {
+    loadProfiles(['assets/profiles.json', 'profiles.json']);
   }
 
   function loadProfiles(paths){
-    const path = paths[0];
-    return fetch(path).then(function(res){
+    var path = paths[0];
+    fetch(path).then(function(res){
       if(!res.ok) throw new Error('not ok');
       return res.json();
-    }).catch(function(err){
-      if(paths.length > 1) return loadProfiles(paths.slice(1));
-      throw err;
-    });
-  }
-
-  loadProfiles(['assets/profiles.json', 'profiles.json'])
-    .then(function(data){
-      const profile = data[id];
+    }).then(function(data){
+      var profile = data[id];
       if(!profile){
         renderNotFound('There\'s no profile registered under "' + id + '".');
         return;
       }
       render(profile);
-    })
-    .catch(function(){
-      renderNotFound('Could not load profiles.json. Make sure it sits at assets/profiles.json or profiles.json next to profile.html.');
+    }).catch(function(err){
+      if(paths.length > 1){
+        loadProfiles(paths.slice(1));
+      } else {
+        renderNotFound('Could not load profiles.json. Make sure it sits at assets/profiles.json or profiles.json next to profile.html.');
+      }
     });
-})();
+  }
 </script>
 </body>
 </html>
