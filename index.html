@@ -29,13 +29,11 @@
   :focus{ outline:none; }
   :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 
-  /* ---------- top pills ---------- */
-  .top-pills{
+  /* ---------- top bar ---------- */
+  .top-bar{
     position:fixed;
-    top:18px; left:16px;
-    display:flex;
-    align-items:center;
-    gap:10px;
+    top:18px; left:16px; right:16px;
+    height:44px;
     z-index:30;
   }
   .glass{
@@ -45,13 +43,15 @@
     border:1px solid rgba(255,255,255,.08);
   }
   .logo-pill{
+    position:absolute; left:0; top:0;
     width:44px; height:44px;
     border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
     overflow:hidden;
   }
-  .logo-pill img{ width:26px; height:26px; object-fit:contain; }
+  .logo-pill img{ width:100%; height:100%; object-fit:cover; display:block; }
   .brand-pill{
+    position:absolute; left:50%; top:0;
+    transform:translateX(-50%);
     height:44px;
     padding:0 18px;
     border-radius:30px;
@@ -60,7 +60,44 @@
     font-size:.92rem;
     letter-spacing:.02em;
     color:#fff;
+    white-space:nowrap;
   }
+  .topbar-right{
+    position:absolute; right:0; top:0;
+  }
+  .icon-btn{
+    width:44px; height:44px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    -webkit-user-select:none; user-select:none;
+  }
+  .icon-btn img{ width:18px; height:18px; pointer-events:none; }
+  .dropdown{
+    position:absolute;
+    top:52px; right:0;
+    background:rgba(20,20,20,.55);
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:6px;
+    min-width:150px;
+    z-index:20;
+    opacity:0;
+    transform:translateY(-6px) scale(.97);
+    pointer-events:none;
+    transition:opacity .15s ease, transform .15s ease;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+  }
+  .dropdown.open{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+  .dropdown-item{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 12px; border-radius:10px;
+    font-size:.86rem; color:#eee; cursor:pointer;
+  }
+  .dropdown-item:active{ background:rgba(255,255,255,.08); }
+  .dropdown-item img{ width:15px; height:15px; }
 
   /* ---------- bottom nav ---------- */
   .bottom-nav{
@@ -211,7 +248,7 @@
   }
   .overlay.open{ opacity:1; pointer-events:auto; }
   .overlay-topbar{ position:absolute; top:0; left:0; right:0; padding:18px 16px; z-index:2; }
-  .icon-btn{
+  .overlay-icon-btn{
     width:38px; height:38px;
     border-radius:50%;
     display:flex; align-items:center; justify-content:center;
@@ -221,7 +258,7 @@
     border:1px solid rgba(255,255,255,.08);
     cursor:pointer;
   }
-  .icon-btn img{ width:18px; height:18px; }
+  .overlay-icon-btn img{ width:18px; height:18px; }
   .share-card{
     width:min(88vw,360px);
     max-height:82vh;
@@ -283,9 +320,15 @@
 </head>
 <body>
 
-  <div class="top-pills">
+  <div class="top-bar">
     <div class="logo-pill glass"><img src="assets/logo.png" alt="community x"></div>
     <div class="brand-pill glass">community x</div>
+    <div class="topbar-right">
+      <div class="icon-btn glass" id="moreBtn" onclick="toggleMenu(event)"><img src="assets/threedot.svg" alt="more"></div>
+      <div class="dropdown" id="dropdown">
+        <div class="dropdown-item" onclick="onAppShare()"><img src="assets/share.svg" alt="">Share</div>
+      </div>
+    </div>
   </div>
 
   <div id="exploreTab" class="tab active">
@@ -311,7 +354,7 @@
   </div>
 
   <div class="overlay" id="shareOverlay">
-    <div class="overlay-topbar"><div class="icon-btn" onclick="closeOverlay()"><img src="assets/back.svg" alt="back"></div></div>
+    <div class="overlay-topbar"><div class="overlay-icon-btn" onclick="closeOverlay()"><img src="assets/back.svg" alt="back"></div></div>
     <div class="share-card">
       <div class="share-title" id="shareTitle">Share</div>
       <div class="share-link-row"><span id="shareUrlText"></span><button class="copy-btn" onclick="copyShareLink()">Copy</button></div>
@@ -347,6 +390,29 @@
       if(paths.length > 1) return fetchJson(paths.slice(1));
       throw err;
     });
+  }
+
+  /* ---------- top-bar dropdown ---------- */
+  function toggleMenu(e){
+    if(e) e.stopPropagation();
+    document.getElementById('dropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e){
+    var dd = document.getElementById('dropdown');
+    var moreBtn = document.getElementById('moreBtn');
+    if(dd && dd.classList.contains('open') && !dd.contains(e.target) && e.target !== moreBtn && !moreBtn.contains(e.target)){
+      dd.classList.remove('open');
+    }
+  });
+
+  function onAppShare(){
+    document.getElementById('dropdown').classList.remove('open');
+    var url = window.location.href;
+    shareState = { url:url, text:'Check out community x' };
+    document.getElementById('shareTitle').textContent = 'Share community x';
+    document.getElementById('shareUrlText').textContent = url;
+    document.getElementById('shareQrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+    openOverlayEl('shareOverlay');
   }
 
   /* ---------- tabs ---------- */
