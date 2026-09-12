@@ -102,28 +102,28 @@
   /* ---------- bottom nav ---------- */
   .bottom-nav{
     position:fixed;
-    bottom:20px; left:50%;
+    bottom:18px; left:50%;
     transform:translateX(-50%);
     display:flex;
     align-items:center;
-    gap:4px;
-    padding:7px;
-    border-radius:40px;
+    gap:2px;
+    padding:4px;
+    border-radius:32px;
     z-index:30;
   }
   .nav-item{
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:3px;
-    padding:9px 20px;
-    border-radius:30px;
+    gap:2px;
+    padding:7px 14px;
+    border-radius:24px;
     cursor:pointer;
     color:#8a8f96;
     transition:background .15s ease, color .15s ease;
     -webkit-user-select:none; user-select:none;
   }
-  .nav-item img{ width:19px; height:19px; opacity:.75; transition:opacity .15s ease; }
-  .nav-item i{ font-size:1.05rem; opacity:.75; }
-  .nav-item span{ font-size:.62rem; font-weight:500; }
+  .nav-item img{ width:15px; height:15px; opacity:.75; transition:opacity .15s ease; }
+  .nav-item i{ font-size:.9rem; opacity:.75; }
+  .nav-item span{ font-size:.56rem; font-weight:500; }
   .nav-item.active{ background:rgba(255,255,255,.09); color:#fff; }
   .nav-item.active img, .nav-item.active i{ opacity:1; }
 
@@ -351,6 +351,10 @@
       <img src="assets/search.svg" alt="">
       <span>Search</span>
     </div>
+    <div class="nav-item" id="navAbout" onclick="showAboutComingSoon()">
+      <img src="assets/about.svg" alt="">
+      <span>About</span>
+    </div>
   </div>
 
   <div class="overlay" id="shareOverlay">
@@ -460,6 +464,16 @@
 
   function goToProfile(profileId){
     window.location.href = 'profile.html?id=' + encodeURIComponent(profileId);
+  }
+
+  function showAboutComingSoon(){
+    var t = document.getElementById('toast');
+    t.textContent = 'About — coming soon';
+    t.classList.add('show');
+    setTimeout(function(){
+      t.classList.remove('show');
+      setTimeout(function(){ t.textContent = 'Link copied'; }, 200);
+    }, 1800);
   }
 
   /* ---------- search ---------- */
