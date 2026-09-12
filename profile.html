@@ -6,6 +6,7 @@
 <title>community x</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
   :root{
     --bg:#000;
@@ -151,7 +152,7 @@
     transition:border-color .15s ease, transform .15s ease;
   }
   .pill:hover{ border-color:#333; transform:translateY(-1px); }
-  .pill img{ width:15px; height:15px; }
+  .pill i{ font-size:.95rem; }
 
   /* ---------- divider ---------- */
   .divider{
@@ -200,16 +201,11 @@
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
 
-  const TICKS = {
-    verifiedg: 'assets/verified-gold.svg',
-    verifiedb: 'assets/verified-blue.svg'
-  };
-
   const LINK_META = {
-    instagram: { label:'Instagram', icon:'assets/icons/instagram.svg' },
-    linkedin:  { label:'LinkedIn',  icon:'assets/icons/linkedin.svg' },
-    x:         { label:'X',         icon:'assets/icons/x.svg' },
-    snapchat:  { label:'Snapchat',  icon:'assets/icons/snapchat.svg' }
+    instagram: { label:'Instagram', icon:'fa-brands fa-instagram', color:'#E1306C' },
+    linkedin:  { label:'LinkedIn',  icon:'fa-brands fa-linkedin',  color:'#0A66C2' },
+    x:         { label:'X',         icon:'fa-brands fa-x-twitter', color:'#FFFFFF' },
+    snapchat:  { label:'Snapchat',  icon:'fa-brands fa-snapchat',  color:'#FFFC00' }
   };
 
   function renderNotFound(msg){
@@ -224,8 +220,7 @@
   }
 
   function render(profile){
-    const tickSrc = TICKS[profile.tick];
-    const tickHtml = tickSrc ? '<img class="tick" src="' + tickSrc + '" alt="verified">' : '';
+    const tickHtml = profile.tick ? '<img class="tick" src="' + profile.tick + '" alt="verified">' : '';
 
     const collegeUrl = profile.collegeUrl || ('https://www.google.com/search?q=' + encodeURIComponent(profile.college || ''));
 
@@ -234,7 +229,7 @@
       if(!url) return '';
       const meta = LINK_META[key];
       return '<a class="pill" href="' + url + '" target="_blank" rel="noopener">' +
-        '<img src="' + meta.icon + '" alt="' + meta.label + '">' + meta.label + '</a>';
+        '<i class="' + meta.icon + '" style="color:' + meta.color + '"></i>' + meta.label + '</a>';
     }).join('');
 
     document.getElementById('app').innerHTML = `
