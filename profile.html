@@ -284,8 +284,18 @@
     return;
   }
 
-  fetch('profiles.json')
-    .then(function(res){ return res.json(); })
+  function loadProfiles(paths){
+    const path = paths[0];
+    return fetch(path).then(function(res){
+      if(!res.ok) throw new Error('not ok');
+      return res.json();
+    }).catch(function(err){
+      if(paths.length > 1) return loadProfiles(paths.slice(1));
+      throw err;
+    });
+  }
+
+  loadProfiles(['assets/profiles.json', 'profiles.json'])
     .then(function(data){
       const profile = data[id];
       if(!profile){
@@ -295,7 +305,7 @@
       render(profile);
     })
     .catch(function(){
-      renderNotFound('Could not load profiles.json.');
+      renderNotFound('Could not load profiles.json. Make sure it sits at assets/profiles.json or profiles.json next to profile.html.');
     });
 })();
 </script>
