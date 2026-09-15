@@ -452,7 +452,7 @@
             '<div class="post-pfp" style="background-image:url(\'' + (author.pfp || '') + '\')"></div>' +
             '<div class="post-author">' +
               '<div class="post-name-row"><span class="post-name">' + escapeHtml(author.name || post.authorId) + '</span>' + tickHtml + '</div>' +
-              '<div class="post-id">@' + escapeHtml(post.authorId) + '</div>' +
+              '<div class="post-id">#' + escapeHtml(post.authorId) + '</div>' +
             '</div>' +
             '<div class="post-share" onclick="event.stopPropagation(); onPostShare(\'' + postId + '\')"><img src="assets/share.svg" alt="share"></div>' +
           '</div>' +
@@ -503,7 +503,7 @@
           '<div class="search-pfp" style="background-image:url(\'' + (p.pfp || '') + '\')"></div>' +
           '<div class="search-info">' +
             '<div class="search-name-row"><span class="search-name">' + escapeHtml(p.name || pid) + '</span>' + tickHtml + '</div>' +
-            '<div class="search-id">@' + escapeHtml(pid) + '</div>' +
+            '<div class="search-id">#' + escapeHtml(pid) + '</div>' +
           '</div>' +
         '</div>'
       );
