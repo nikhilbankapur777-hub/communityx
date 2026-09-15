@@ -5,12 +5,5 @@
     "type": "image",
     "link": "assets/posts/post_001.jpg",
     "caption": "Grinding for finals. Discipline today builds the freedom you want tomorrow."
-  },
-  "post_002": {
-    "id": "post_002",
-    "authorId": "anush@commx",
-    "type": "video",
-    "link": "assets/posts/post_002.mp4",
-    "caption": "Shipping x0s.link today. Small progress, every day."
   }
 }
