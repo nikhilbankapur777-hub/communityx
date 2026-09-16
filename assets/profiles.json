@@ -26,5 +26,50 @@
       "x": "",
       "snapchat": ""
     }
+  },
+  {
+  "Shiva@commx": {
+    "name": "Shiva",
+    "tick": "assets/verifiedg.svg",
+    "wallpaper": "assets/wallpapers/Shivaw.png",
+    "pfp": "assets/pfps/Shiva.png",
+    "college": "NEW HORIZON COLLEGE OF ENGINEERING",
+    "bio": "......",
+    "links": {
+      "instagram": "https://www.instagram.com/its_me_again_sssr?stkn=NW12aDZvZHI3Nng3",
+      "linkedin": "",
+      "x": "",
+      "snapchat": ""
+    }
+  },
+  {
+  "Charan @commx": {
+    "name": "Naga charan",
+    "tick": "assets/verifiedg.svg",
+    "wallpaper": "assets/wallpapers/Charan w.png",
+    "pfp": "assets/pfps/Charan .png",
+    "college": "New horizon college of engineering",
+    "bio": "I am talkitive",
+    "links": {
+      "instagram": "",
+      "linkedin": "",
+      "x": "",
+      "snapchat": ""
+    }
+  },
+  {
+  "Ajit@commx": {
+    "name": "Ajit Yallappa Datanal",
+    "tick": "assets/verifiedg.svg",
+    "wallpaper": "assets/wallpapers/Ajitw.png",
+    "pfp": "assets/pfps/Ajit.png",
+    "college": "NEW HORIZON COLLEGE OF ENGINEERING",
+    "bio": "I am  a good person",
+    "links": {
+      "instagram": "https://www.instagram.com/ajit_datanal?stkn=c2hpaDlrbG1mZGJv",
+      "linkedin": "",
+      "x": "",
+      "snapchat": ""
+    }
   }
 }
